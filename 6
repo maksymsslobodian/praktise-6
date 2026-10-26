@@ -1,0 +1,139 @@
+class ArrayStack:
+    def __init__(self, capacity=10):
+        self.capacity = capacity
+        self.data = [None] * capacity
+        self.top = -1
+ 
+    def is_empty(self):
+        return self.top == -1
+ 
+    def is_full(self):
+        return self.top == self.capacity - 1
+ 
+    def push(self, value):
+        if self.is_full():
+            raise OverflowError("Стек переповнений")
+        self.top += 1
+        self.data[self.top] = value
+ 
+    def pop(self):
+        if self.is_empty():
+            raise IndexError("Стек порожній")
+        value = self.data[self.top]
+        self.data[self.top] = None
+        self.top -= 1
+        return value
+ 
+    def peek(self):
+        if self.is_empty():
+            raise IndexError("Стек порожній")
+        return self.data[self.top]
+ 
+    def clear(self):
+        self.data = [None] * self.capacity
+        self.top = -1
+ 
+    def count(self):
+        return self.top + 1
+ 
+    def size(self):
+        return self.top + 1
+ 
+    def to_string(self):
+        items = [str(self.data[i]) for i in range(self.top, -1, -1)]
+        return "Stack(top -> bottom): [" + ", ".join(items) + "]"
+ 
+    def __str__(self):
+        return self.to_string()
+ 
+ 
+class Node:
+    def __init__(self, data, next_node=None):
+        self.data = data
+        self.next = next_node
+ 
+ 
+class NodeStack:
+    def __init__(self):
+        self.top = None
+        self._size = 0
+ 
+    def is_empty(self):
+        return self.top is None
+ 
+    def push(self, value):
+        self.top = Node(value, self.top)
+        self._size += 1
+ 
+    def pop(self):
+        if self.is_empty():
+            raise IndexError("Стек порожній")
+        value = self.top.data
+        self.top = self.top.next
+        self._size -= 1
+        return value
+ 
+    def peek(self):
+        if self.is_empty():
+            raise IndexError("Стек порожній")
+        return self.top.data
+ 
+    def clear(self):
+        self.top = None
+        self._size = 0
+ 
+    def count(self):
+        n = 0
+        current = self.top
+        while current is not None:
+            n += 1
+            current = current.next
+        return n
+ 
+    def size(self):
+        return self._size
+ 
+    def to_string(self):
+        items = []
+        current = self.top
+        while current is not None:
+            items.append(str(current.data))
+            current = current.next
+        return "Stack(top -> bottom): [" + ", ".join(items) + "]"
+ 
+    def __str__(self):
+        return self.to_string()
+ 
+ 
+def demo(stack, title):
+    print("=" * 50)
+    print(title)
+    print("=" * 50)
+ 
+    for value in (11, 22, 33):
+        stack.push(value)
+        print(f"push({value})  ->", stack)
+ 
+    print("peek()   =", stack.peek())
+    print("size()   =", stack.size())
+    print("count()  =", stack.count())
+    print("toString =", stack.to_string())
+ 
+    print("pop()    =", stack.pop())
+    print("Після pop:", stack)
+    print("size()   =", stack.size())
+ 
+    stack.clear()
+    print("clear()  ->", stack)
+    print("size()   =", stack.size())
+ 
+    try:
+        stack.pop()
+    except IndexError as e:
+        print("pop() з порожнього стеку -> помилка:", e)
+    print()
+ 
+ 
+if __name__ == "__main__":
+    demo(ArrayStack(capacity=5), "Стек на основі масиву")
+    demo(NodeStack(), "Стек на основі вузлів")
